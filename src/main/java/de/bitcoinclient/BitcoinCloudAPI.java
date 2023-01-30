@@ -5,6 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.bitcoinclient.util.HTTP;
+import de.bitcoinclient.util.Manager;
+import de.bitcoinclient.util.builder.Module;
 import de.bitcoinclient.util.builder.Service;
 
 import java.util.ArrayList;
@@ -14,6 +16,48 @@ public class BitcoinCloudAPI {
     /*public static void main(String[] args) {
 
     }*/
+
+    public static String stopCloud() {
+        JsonObject json = parse(HTTP.getHttp("http://127.0.0.1:10000/api?stopCloud"));
+        int response = json.get("type").getAsInt();
+        if(response != 403) {
+            return json.get("value").getAsString();
+        }
+        return json.get("value").getAsString();
+    }
+
+    public static ArrayList<Module> getLoadedModules() {
+        ArrayList<Module> modules = new ArrayList<>();
+        JsonParser parser = new JsonParser();
+        JsonArray jsonArray = (JsonArray) parser.parse(HTTP.getHttp("http://127.0.0.1:10000/api?loadedModules"));
+        jsonArray.forEach(jsonElement -> {
+            JsonObject object = jsonElement.getAsJsonObject();
+            modules.add(Manager.convertFromJson(object));
+        });
+        return modules;
+    }
+
+    public static ArrayList<Module> getAllModules() {
+        ArrayList<Module> modules = new ArrayList<>();
+        JsonParser parser = new JsonParser();
+        JsonArray jsonArray = (JsonArray) parser.parse(HTTP.getHttp("http://127.0.0.1:10000/api?allModules"));
+        jsonArray.forEach(jsonElement -> {
+            JsonObject object = jsonElement.getAsJsonObject();
+            modules.add(Manager.convertFromJson(object));
+        });
+        return modules;
+    }
+
+    public static ArrayList<Module> getAvailableModules() {
+        ArrayList<Module> modules = new ArrayList<>();
+        JsonParser parser = new JsonParser();
+        JsonArray jsonArray = (JsonArray) parser.parse(HTTP.getHttp("http://127.0.0.1:10000/api?availableModules"));
+        jsonArray.forEach(jsonElement -> {
+            JsonObject object = jsonElement.getAsJsonObject();
+            modules.add(Manager.convertFromJson(object));
+        });
+        return modules;
+    }
 
     public static int getPlayerSize(String serviceName) {
         JsonObject json = parse(HTTP.getHttp("http://127.0.0.1:10000/api?getSizePlayers&"+serviceName));
