@@ -131,6 +131,10 @@ public class BitcoinCloudAPI {
         return service;
     }
 
+    public static String getPrefix() {
+        return "§8| §eBitcoin§7Cloud §8●§r ";
+    }
+
     private static JsonObject parse(String s) {
         JsonParser parser = new JsonParser();
         return (JsonObject) parser.parse(s);
