@@ -8,7 +8,10 @@ import de.bitcoinclient.util.HTTP;
 import de.bitcoinclient.util.Manager;
 import de.bitcoinclient.util.builder.Module;
 import de.bitcoinclient.util.builder.Service;
+import de.bitcoinclient.util.builder.Templates;
 
+import java.io.FileReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -16,6 +19,8 @@ public class BitcoinCloudAPI {
     /*public static void main(String[] args) {
 
     }*/
+
+    private static JsonParser parser = new JsonParser();
 
     public static String stopCloud() {
         JsonObject json = parse(HTTP.getHttp("http://127.0.0.1:10000/api?stopCloud"));
@@ -129,6 +134,35 @@ public class BitcoinCloudAPI {
         service.setIp(json.get("ip").getAsString());
         service.setOnline(json.get("online").getAsBoolean());
         return service;
+    }
+
+    public static ArrayList<Templates> getTemplates() {
+        JsonArray jsonArray = (JsonArray) parser.parse(HTTP.getHttp("http://127.0.0.1:10000/api?getTemplates"));
+        ArrayList<Templates> allTemplates = new ArrayList<>();
+        jsonArray.forEach(jsonElement -> {
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            Templates template;
+            if(jsonObject.get("version").getAsString().equalsIgnoreCase("bungee")) {
+                template = new Templates(jsonObject.get("name").getAsString(),
+                        jsonObject.get("static").getAsBoolean(),
+                        jsonObject.get("provider").getAsString());
+                template.setMinServiceCount(jsonObject.get("minServiceCount").getAsInt());
+                template.setMemory(jsonObject.get("memory").getAsInt());
+                template.setType(jsonObject.get("type").getAsString());
+                template.setVersion("PROXY");
+            } else {
+                template = new Templates(jsonObject.get("name").getAsString(),
+                        jsonObject.get("static").getAsBoolean(),
+                        jsonObject.get("version").getAsString(),
+                        jsonObject.get("provider").getAsString());
+                template.setMinServiceCount(jsonObject.get("minServiceCount").getAsInt());
+                template.setMemory(jsonObject.get("memory").getAsInt());
+                template.setType(jsonObject.get("type").getAsString());
+            }
+            allTemplates.add(template);
+        });
+
+        return allTemplates;
     }
 
     public static String getPrefix() {
