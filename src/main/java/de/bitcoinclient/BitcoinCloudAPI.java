@@ -132,7 +132,10 @@ public class BitcoinCloudAPI {
     }
 
     public static String getPrefix() {
-        return "§8| §eBitcoin§7Cloud §8●§r ";
+        String prefix = "";
+        JsonObject prefixJson = parse(HTTP.getHttp("http://127.0.0.1:10000/api?prefix"));
+        prefix = prefixJson.get("value").getAsString();
+        return prefix;
     }
 
     private static JsonObject parse(String s) {
