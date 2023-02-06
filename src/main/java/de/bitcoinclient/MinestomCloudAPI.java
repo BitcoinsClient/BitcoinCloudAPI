@@ -24,6 +24,11 @@ public class MinestomCloudAPI {
         return json.get("value").getAsString();
     }
 
+    public static String setDown(int port) {
+        JsonObject json = parse(HTTP.getHttp("http://127.0.0.1:10000/minestom?setDown&"+port));
+        return json.get("type").getAsString();
+    }
+
     private static JsonObject parse(String s) {
         JsonParser parser = new JsonParser();
         return (JsonObject) parser.parse(s);
