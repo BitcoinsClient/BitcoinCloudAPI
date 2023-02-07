@@ -22,6 +22,16 @@ public class BitcoinCloudAPI {
 
     private static JsonParser parser = new JsonParser();
 
+    public static String startCustomService(String name, boolean isStatic, String templateName) {
+        JsonObject json = parse(HTTP.getHttp("http://127.0.0.1:10000/api?startCustom&sname="+name+"&istatic="+isStatic+"&tname="+templateName));
+        return json.get("value").getAsString();
+    }
+
+    public static String startCustomService(String name, String templateName) {
+        JsonObject json = parse(HTTP.getHttp("http://127.0.0.1:10000/api?startCustom&sname="+name+"&tname="+templateName));
+        return json.get("value").getAsString();
+    }
+
     public static String stopCloud() {
         JsonObject json = parse(HTTP.getHttp("http://127.0.0.1:10000/api?stopCloud"));
         int response = json.get("type").getAsInt();
