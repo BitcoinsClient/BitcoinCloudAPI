@@ -23,9 +23,12 @@ public class BitcoinCloudAPI {
     private static JsonParser parser = new JsonParser();
 
     public static ArrayList<String> getAllStaticServer() {
-        String info = HTTP.getHttp("http://127.0.0.1:10000/api?getAllStaticServer").split("\n")[0];
+        JsonObject info = parse(HTTP.getHttp("http://127.0.0.1:10000/api?getAllStaticServer"));
+        if(info.get("value").getAsString().equalsIgnoreCase("ns")) {
+            return new ArrayList<>();
+        }
         ArrayList<String> temp = new ArrayList<>();
-        for (String s : info.split("#")) {
+        for (String s : info.get("value").getAsString().split("#")) {
             if(s.equalsIgnoreCase(" ")) {
                 continue;
             }
