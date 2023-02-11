@@ -12,6 +12,7 @@ import de.bitcoinclient.util.builder.Templates;
 
 import java.io.FileReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -193,7 +194,8 @@ public class BitcoinCloudAPI {
     public static String getPrefix() {
         String prefix = "";
         JsonObject prefixJson = parse(HTTP.getHttp("http://127.0.0.1:10000/api?prefix"));
-        prefix = prefixJson.get("value").getAsString();
+        prefix = new String(prefixJson.get("value").getAsString().getBytes(), StandardCharsets.UTF_8);
+        prefix.replace("&","§");
         return prefix;
     }
 
