@@ -194,8 +194,7 @@ public class BitcoinCloudAPI {
     public static String getPrefix() {
         String prefix = "";
         JsonObject prefixJson = parse(HTTP.getHttp("http://127.0.0.1:10000/api?prefix"));
-        prefix = new String(prefixJson.get("value").getAsString().getBytes(), StandardCharsets.UTF_8);
-        prefix.replace("&","§");
+        prefix = prefixJson.get("value").getAsString().replace("&","§");
         return prefix;
     }
 
